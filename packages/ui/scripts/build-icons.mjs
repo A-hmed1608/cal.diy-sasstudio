@@ -135,7 +135,11 @@ async function writeIfChanged(filepath, newContent) {
     .catch(() => "");
   if (currentContent === newContent) return false;
   await fsExtra.writeFile(filepath, newContent, "utf8");
-  await $`node ${biomeBin} format --write ${filepath}`;
+  try {
+    await $`node ${biomeBin} format --write ${filepath}`;
+  } catch (e) {
+    // Ignore biome format warnings for generated sprite files
+  }
   return true;
 }
 
